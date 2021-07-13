@@ -5,7 +5,66 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .header {
+            background: lightblue;
+        }
+    </style>
 </head>
-<body></body>
+<body>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    let isSetTrue = false;
+
+    function showOnlyLegendary() {
+        isSetTrue = !isSetTrue;
+        $('body').empty();
+        callApi();
+    }
+
+    function renderTable(tableData) {
+        let tb = $('<table class="tb"></table>');
+        $(tableData).each((i, rowData) => {
+            let eachRow = $('<tr></tr>');
+            if (i === 0) {
+                eachRow = $('<tr class="header"></tr>');
+            }
+            $(rowData).each((j, singleData) => {
+                eachRow.append($('<td>' + singleData + '</td>'));
+            });
+            tb.append(eachRow);
+        });
+        return tb;
+    }
+
+    const callApi = () => $.ajax({
+        type: "GET",
+        url: "./Pokemon.csv",
+        success: function (data) {
+
+            let allData = Papa.parse(data).data;
+
+            $('body').append("<button onclick=\"showOnlyLegendary()\"> Only Legendary </button>")
+
+            if (isSetTrue) {
+                const trueData = [];
+                for (const all of allData) {
+                    if (all[12] === 'True') {
+                        trueData.push(all);
+                    }
+                }
+                $('body').append(renderTable(trueData));
+            } else {
+                $('body').append(renderTable(allData));
+            }
+
+        }
+    });
+
+    callApi();
+
 </script>
 </html>
