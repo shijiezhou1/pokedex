@@ -42,7 +42,7 @@
 
     const callApi = () => $.ajax({
         type: "GET",
-        url: "./Pokemon.csv",
+        url: "https://raw.githubusercontent.com/shijiezhou1/pokedex/master/Pokemon.csv",
         success: function (data) {
 
             let allData = Papa.parse(data).data;
